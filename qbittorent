@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: qbittorent
+  labels:
+    purpose: demonstrate-envars
+spec:
+  containers:
+  - name: qbitrotert-container
+    image: lscr.io/linuxserver/qbittorrent:latest
+    env:
+    - name: PUID
+      value: 1000
+    - name: PGID
+      value: 1000
+    - name: TZ
+      value: Etc/UTC
+    - name: WEBUI_PORT
+      value: 8080
+    volumeMounts:
+      - name: config-vol
+        mountPath: /config
+      - name: downloads-vol
+        mountPath: /downloads
+    ports:
+      - containerPort: 8080
+      - containerPort: 6881
+      - containerPort: 6881
+        protocol: UDP
+  volumes:
+  - name: config-vol
+    hostPath:
+      path: /home/podman/volumes/qbittorrent/config
+  - name: downloads-vol
+    hostPath:
+      path: /home/podman/volumes/qbittorrent/downloads
+    restart: unless-stopped
